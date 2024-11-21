@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { ActivityIndicator, View } from 'react-native';
 import * as Font from 'expo-font';
-import AppNavigator from './src/navigation';
+import TabNavigator from './src/navigation/TabNavigation';
+import { NavigationContainer } from '@react-navigation/native';
 
 export default function App() {
   const [fontsLoaded, setFontsLoaded] = useState(false);
@@ -28,5 +29,9 @@ export default function App() {
     );
   }
 
-  return <AppNavigator />;
+  return (
+    <NavigationContainer>
+    <TabNavigator />
+  </NavigationContainer>
+)
 }
