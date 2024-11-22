@@ -64,7 +64,7 @@ const MovieDetailScreen = ({ route, navigation }) => {
           </TouchableOpacity>
           <Image
             source={{
-              uri: `https://image.tmdb.org/t/p/w780${movie.backdrop_path}`,
+              uri: `https://image.tmdb.org/t/p/w780${movie.poster_path}`,
             }}
             style={styles.poster}
           />

@@ -30,6 +30,7 @@ export const getUpcomingMovies = async () => {
 export const getMovieDetails = async (movieId) => {
   try {
     const response = await apiClient.get(`/movie/${movieId}`);
+
     return response.data;
   } catch (error) {
     console.error('Error fetching movie details:', error);
@@ -65,6 +66,7 @@ export const searchMovies = async (query) => {
     const response = await apiClient.get('/search/movie', {
       params: { query },
     });
+    console.log(response.data,'data')
     return response.data.results;
   } catch (error) {
     console.error('Error searching movies:', error);

@@ -22,12 +22,12 @@ const TabNavigator = () => {
     }
     return {
       backgroundColor: '#201e3b',
-      borderTopLeftRadius: 20,
-      borderTopRightRadius: 20,
-      height: 67,
+      height: 70,
       position: 'absolute',
       borderTopWidth: 0,
-      marginHorizontal: 5,
+      borderRadius: 15,
+      alignItems: 'center', // Ensure all contents in tab are centered horizontally
+      justifyContent: 'center', // Ensure all contents in tab are centered vertically
     };
   };
 
@@ -59,6 +59,16 @@ const TabNavigator = () => {
         tabBarInactiveTintColor: 'gray',
         headerShown: false,
         tabBarStyle: getTabBarStyle(route),
+        tabBarItemStyle: {
+          alignItems: 'center', 
+          justifyContent: 'center', 
+          marginTop:4
+        },
+        tabBarLabelStyle: {
+          fontSize: 12,
+          textAlign: 'center', 
+          marginTop: 3, 
+        },
       })}
     >
       <Tab.Screen name="dashboard" component={DashboardScreen} options={{ title: 'Dashboard' }} />

@@ -32,24 +32,26 @@ const MovieListScreen = ({ navigation }) => {
       style={styles.card}
       onPress={() => navigation.navigate('MovieDetail', { movieId: item.id })}
     >
-      <Image
-        source={{ uri: `https://image.tmdb.org/t/p/w500${item.poster_path}` }}
-        style={styles.poster}
-      />
-      {/* Title Overlay */}
-      <View style={styles.overlay}>
-        <Text style={styles.overlayTitle} numberOfLines={1}>
-          {item.title}
-        </Text>
+      <View style={styles.imageContainer}>
+        <Image
+          source={{ uri: `https://image.tmdb.org/t/p/original${item.backdrop_path}` }}
+
+          style={styles.poster}
+          resizeMode="cover" // Ensures the image fills the container
+        />
+        <View style={styles.overlay}>
+          <Text style={styles.overlayTitle} numberOfLines={1}>
+            {item.title}
+          </Text>
+        </View>
       </View>
     </TouchableOpacity>
   );
-  
 
   const renderHeader = () => (
     <View style={styles.headerContainer}>
       <Text style={styles.headerTitle}>Watch</Text>
-      <TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate('search')}>
         <Icon name="search" size={24} color="gray" />
       </TouchableOpacity>
     </View>
@@ -72,9 +74,8 @@ const MovieListScreen = ({ navigation }) => {
 export default MovieListScreen;
 
 const styles = StyleSheet.create({
-
   listFooter: {
-    height: 60, 
+    height: 60,
   },
   container: {
     flex: 1,
@@ -84,46 +85,45 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    alignContent:'center',
     paddingHorizontal: 24,
     paddingVertical: 34,
     backgroundColor: '#fff',
     borderBottomWidth: 1,
     borderBottomColor: '#ddd',
-    position: 'absolute', // Sticky behavior
-    top: 0,
-    left: 0,
-    right: 0,
-    zIndex: 10,
   },
   headerTitle: {
     fontSize: 24,
-    fontWeight: 'CustomFont',
+    fontWeight: 'bold',
     color: '#333',
-    justifyContent:'center'
   },
   listContent: {
-    paddingTop: 60, // Push content below the sticky header
     paddingHorizontal: 16,
+    paddingBottom: 16,
   },
   card: {
-    backgroundColor: '#fff',
-    borderRadius: 12,
     marginBottom: 16,
-    overflow: 'hidden',
+    borderRadius: 16, 
+    overflow: 'hidden', 
+    backgroundColor: '#fff',
     shadowColor: '#000',
     shadowOpacity: 0.1,
     shadowRadius: 6,
-    elevation: 3,
+    elevation: 3, 
+  },
+  imageContainer: {
+    width: '100%',
+    height: 200, 
+    position: 'relative', 
+    overflow: 'hidden', 
+    borderRadius: 16, 
   },
   poster: {
     width: '100%',
-    height: 240, // Adjust for better proportions
-    resizeMode: 'cover', // Ensures the image covers its container
+    height: '100%',
   },
   overlay: {
     position: 'absolute',
-    bottom: 10, 
+    bottom: 0,
     left: 0,
     right: 0,
     // backgroundColor: 'rgba(0, 0, 0, 0.6)', 
@@ -131,11 +131,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
   },
   overlayTitle: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: 'bold',
     color: '#fff',
-    textAlign: 'start',
-    fontFamily:"CustomFont-Bold"
   },
-  
 });
