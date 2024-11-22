@@ -1,27 +1,39 @@
-import React from 'react';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import MovieDetailScreen from '../../screens/MovieDetailScreen';
-import MovieListScreen from '../../screens/MovieListScreen';
-import Search from '../../screens/Search';
+import React from "react";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import MovieDetailScreen from "../../screens/MovieDetailScreen";
+import MovieListScreen from "../../screens/MovieListScreen";
+import Search from "../../screens/Search";
+import TicketScreen from "../../screens/TicketScreen";
 
 const Stack = createNativeStackNavigator();
 
 const MoviesStackNavigator = () => {
   return (
     <Stack.Navigator initialRouteName="MovieList">
-      <Stack.Screen 
+      <Stack.Screen
         name="MovieList"
         component={MovieListScreen}
-        options={{ headerShown: false }} 
+        options={{ headerShown: false }}
       />
-      <Stack.Screen 
+      <Stack.Screen
         name="MovieDetail"
         component={MovieDetailScreen}
-        options={{ 
-          headerShown: false, 
-        }} 
+        options={{
+          headerShown: false,
+        }}
       />
-      <Stack.Screen name='search' component={Search} options={{headerShown:false}}/>
+      <Stack.Screen
+        name="ticket"
+        component={TicketScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="search"
+        component={Search}
+        options={{ headerShown: false }}
+      />
     </Stack.Navigator>
   );
 };

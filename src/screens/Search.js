@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import {
   SafeAreaView,
   FlatList,
@@ -7,8 +7,8 @@ import {
   StyleSheet,
   View,
   Image,
-} from 'react-native';
-import apiClient from '../services/Api';
+} from "react-native";
+import apiClient from "../services/Api";
 
 const Search = ({ navigation }) => {
   const [moviesByGenre, setMoviesByGenre] = useState({});
@@ -19,11 +19,11 @@ const Search = ({ navigation }) => {
     const fetchGenresAndMovies = async () => {
       try {
         // Fetch genres
-        const genreResponse = await apiClient.get('/genre/movie/list');
+        const genreResponse = await apiClient.get("/genre/movie/list");
         const genreList = genreResponse.data.genres;
 
         // Fetch upcoming movies
-        const movieResponse = await apiClient.get('/movie/upcoming');
+        const movieResponse = await apiClient.get("/movie/upcoming");
         const movies = movieResponse.data.results;
 
         // Categorize movies by genre
@@ -44,17 +44,20 @@ const Search = ({ navigation }) => {
         // Filter out genres without valid images and remove "Thriller"
         const uniqueImages = new Set();
         const genresWithImagesTemp = genreList.filter((genre) => {
-          if (genre.name === 'Thriller') {
+          if (genre.name === "Thriller") {
             return false; // Exclude "Thriller"
           }
           const movies = categorizedMovies[genre.name];
           if (movies && movies.length > 0) {
             // Find a movie with a valid image
             const validMovie = movies.find(
-              (m) => (m.backdrop_path || m.poster_path) && !uniqueImages.has(m.backdrop_path || m.poster_path)
+              (m) =>
+                (m.backdrop_path || m.poster_path) &&
+                !uniqueImages.has(m.backdrop_path || m.poster_path)
             );
             if (validMovie) {
-              const imagePath = validMovie.backdrop_path || validMovie.poster_path;
+              const imagePath =
+                validMovie.backdrop_path || validMovie.poster_path;
               uniqueImages.add(imagePath);
               genre.image = `https://image.tmdb.org/t/p/w500${imagePath}`; // Attach unique image to the genre
               return true; // Keep this genre
@@ -66,7 +69,7 @@ const Search = ({ navigation }) => {
         setMoviesByGenre(categorizedMovies); // Save categorized movies
         setGenresWithImages(genresWithImagesTemp); // Save genres with valid images
       } catch (error) {
-        console.error('Error fetching genres or movies:', error);
+        console.error("Error fetching genres or movies:", error);
       }
     };
 
@@ -79,10 +82,17 @@ const Search = ({ navigation }) => {
       <TouchableOpacity
         style={styles.genreCard}
         onPress={() =>
-          navigation.navigate('MoviesByGenre', { genreName: item.name, movies: moviesByGenre[item.name] })
+          navigation.navigate("", {
+            genreName: item.name,
+            movies: moviesByGenre[item.name],
+          })
         }
       >
-        <Image style={styles.genreImage} source={{ uri: item.image }} resizeMode="cover" />
+        <Image
+          style={styles.genreImage}
+          source={{ uri: item.image }}
+          resizeMode="cover"
+        />
         <View style={styles.genreOverlay}>
           <Text style={styles.genreTitle}>{item.name}</Text>
         </View>
@@ -108,39 +118,39 @@ export default Search;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    padding: 16,
-    paddingHorizontal:16
+    backgroundColor: "#fff",
   },
-  genreList: {
-    justifyContent: 'space-between',
-  },
+
   genreCard: {
     flex: 1,
     margin: 8,
     borderRadius: 12,
-    overflow: 'hidden',
-    backgroundColor: '#f5f5f5',
+    overflow: "hidden",
+    backgroundColor: "#f5f5f5",
     height: 150,
-    position: 'relative',
+    position: "relative",
+    paddingHorizontal: 4,
   },
   genreImage: {
-    width: '100%',
-    height: '100%',
+    width: "100%",
+    height: "100%",
+    paddingHorizontal: 4,
+    borderRadius: 12,
+    marginBottom: 23,
   },
   genreOverlay: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 0,
     left: 0,
     right: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    // backgroundColor: 'rgba(0, 0, 0, 0.7)',
     paddingVertical: 8,
     paddingHorizontal: 10,
   },
   genreTitle: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 16,
-    fontWeight: 'bold',
-    textAlign: 'center',
+    fontWeight: "bold",
+    textAlign: "center",
   },
 });

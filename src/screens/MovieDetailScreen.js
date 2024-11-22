@@ -11,13 +11,13 @@ import {
 } from "react-native";
 import { getMovieDetails, getMovieTrailers } from "../services/Api";
 import Icon from "react-native-vector-icons/Ionicons";
-
+import VideoScreen from "../components/videoRenderer";
 const { height } = Dimensions.get("window"); // Get the screen height
 
 const MovieDetailScreen = ({ route, navigation }) => {
   const { movieId } = route.params;
   const [movie, setMovie] = useState(null);
-
+  const [videoUrl, setVideoUrl] = useState(null);
   useEffect(() => {
     const fetchMovieDetails = async () => {
       try {
@@ -36,13 +36,14 @@ const MovieDetailScreen = ({ route, navigation }) => {
       const trailers = await getMovieTrailers(movieId);
       const trailer = trailers.find((video) => video.type === "Trailer");
       if (trailer) {
-        navigation.navigate("Trailer", {
-          videoUrl: `https://www.youtube.com/watch?v=${trailer.key}`,
-        });
+        setVideoUrl(`https://www.youtube.com/watch?v=${trailer.key}`);
       }
     } catch (error) {
       console.error("Error fetching trailer:", error);
     }
+  };
+  const handleClosePlayer = () => {
+    setVideoUrl(null); // Reset the video URL to close the player
   };
 
   if (!movie) {
@@ -51,75 +52,91 @@ const MovieDetailScreen = ({ route, navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView>
-        {/* Movie Poster */}
-        <View style={styles.header}>
-          {/* Back Button */}
-          <TouchableOpacity
-            onPress={() => navigation.goBack()}
-            style={styles.backButton}
-          >
-            <Icon name="chevron-back" color="#fff" size={24} />
-            <Text style={styles.buttonText}>Watch</Text>
-          </TouchableOpacity>
-          <Image
-            source={{
-              uri: `https://image.tmdb.org/t/p/w780${movie.poster_path}`,
-            }}
-            style={styles.poster}
-          />
-
-          {/* Title and Buttons Positioned Over the Image */}
-          <View style={[styles.overlayContainer, { top: height * 0.2 }]}>
-            <Text style={styles.movieTitle}>{movie.title}</Text>
-            <Text style={styles.releaseDate}>
-              In Theaters {movie.release_date}
-            </Text>
-            <TouchableOpacity style={styles.getTicketsButton}>
-              <Text style={styles.getTicketsButtonText}>Get Tickets</Text>
-            </TouchableOpacity>
+      {videoUrl ? (
+        <VideoScreen url={videoUrl} onClose={handleClosePlayer} />
+      ) : (
+        <ScrollView>
+          {/* Movie Poster */}
+          <View style={styles.header}>
+            {/* Back Button */}
             <TouchableOpacity
-              style={styles.watchTrailerButton}
-              onPress={handleWatchTrailer}
+              onPress={() => navigation.goBack()}
+              style={styles.backButton}
             >
-              <Text style={styles.watchTrailerButtonText}>▶ Watch Trailer</Text>
+              <Icon name="chevron-back" color="#fff" size={24} />
+              <Text style={styles.buttonText}>Watch</Text>
             </TouchableOpacity>
-          </View>
-        </View>
+            <Image
+              source={{
+                uri: `https://image.tmdb.org/t/p/w780${movie.backdrop_path}`,
+              }}
+              style={styles.poster}
+            />
 
-        {/* Genres */}
-        <View style={styles.genresContainer}>
-          <Text style={styles.sectionTitle}>Genres</Text>
-          <View style={styles.genres}>
-            {movie.genres.map((genre, index) => {
-              const genreColors = [
-                "#007BFF", // Blue
-                "#28A745", // Green
-                "#FFC107", // Yellow
-                "#DC3545", // Red
-                "#6F42C1", // Purple
-                "#17A2B8", // Teal
-              ];
-              const backgroundColor = genreColors[index % genreColors.length]; 
-              return (
-                <View
-                  key={genre.id}
-                  style={[styles.genreTag, { backgroundColor }]} 
-                >
-                  <Text style={styles.genreText}>{genre.name}</Text>
-                </View>
-              );
-            })}
+            {/* Title and Buttons Positioned Over the Image */}
+            <View style={[styles.overlayContainer, { top: height * 0.2 }]}>
+              <Text style={styles.movieTitle}>{movie.title}</Text>
+              <Text style={styles.releaseDate}>
+                In Theaters {movie.release_date}
+              </Text>
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate("ticket", {
+                    data: {
+                      movieTitle: movie.title,
+                      releaseDate: movie.release_date,
+                    },
+                  })
+                }
+                style={styles.getTicketsButton}
+              >
+                <Text style={styles.getTicketsButtonText}>Get Tickets</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.watchTrailerButton}
+                onPress={handleWatchTrailer}
+              >
+                <Text style={styles.watchTrailerButtonText}>
+                  ▶ Watch Trailer
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
-        <View style={styles.horizontalLine}></View>
 
-        {/* Overview */}
-        <View style={styles.overviewContainer}>
-          <Text style={styles.sectionTitle}>Overview</Text>
-          <Text style={styles.overviewText}>{movie.overview}</Text>
-        </View>
-      </ScrollView>
+          {/* Genres */}
+          <View style={styles.genresContainer}>
+            <Text style={styles.sectionTitle}>Genres</Text>
+            <View style={styles.genres}>
+              {movie.genres.map((genre, index) => {
+                const genreColors = [
+                  "#007BFF", // Blue
+                  "#28A745", // Green
+                  "#FFC107", // Yellow
+                  "#DC3545", // Red
+                  "#6F42C1", // Purple
+                  "#17A2B8", // Teal
+                ];
+                const backgroundColor = genreColors[index % genreColors.length];
+                return (
+                  <View
+                    key={genre.id}
+                    style={[styles.genreTag, { backgroundColor }]}
+                  >
+                    <Text style={styles.genreText}>{genre.name}</Text>
+                  </View>
+                );
+              })}
+            </View>
+          </View>
+          <View style={styles.horizontalLine}></View>
+
+          {/* Overview */}
+          <View style={styles.overviewContainer}>
+            <Text style={styles.sectionTitle}>Overview</Text>
+            <Text style={styles.overviewText}>{movie.overview}</Text>
+          </View>
+        </ScrollView>
+      )}
     </SafeAreaView>
   );
 };
@@ -224,7 +241,7 @@ const styles = StyleSheet.create({
   genreText: {
     fontSize: 14,
     fontWeight: "bold",
-    color: "#fff", 
+    color: "#fff",
   },
   overviewContainer: {
     paddingHorizontal: 16,
