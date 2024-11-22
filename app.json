@@ -19,13 +19,19 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.fireflytechsolutions.MovieBookingApp"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "assetBundlePatterns": [
       "assets/fonts/*"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "609fddf1-2ad7-4a44-9358-b6511f7779f4"
+      }
+    }
   }
 }
